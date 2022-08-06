@@ -1,32 +1,48 @@
-const { response } = require('express');
+const { response, request } = require('express');
 
 
 
-const userGet = (req, response) => {
+const userGet = (request, response) => {
+
+    const { q, nombre = 'No name', page = 1, limit = 1  } = request.query;
+
     response.json({
-        msg:'get API - controller '
+        msg:'get API - controller ',
+        q,
+        nombre,
+        page,
+        limit
     });
 };
 
-const userPut = (req, response) => {
+const userPut = (request, response) => {
+
+    const { id } = request.params;
+
     response.json({
-        msg:'put API - controller'
+        msg:'put API - controller',
+        id
     });
 };
 
-const userPost = (req, response) => {
+const userPost = (request, response) => {
+    
+    const { nombre, edad } = request.body;
+
     response.json({
-        msg:'post API - controller'
+        msg:'post API - controller',
+        nombre,
+        edad
     });
 };
 
-const userDelete = (req, response) => {
+const userDelete = (request, response) => {
     response.json({
         msg:'delete API - controller'
     });
 };
 
-const userPatch = (req, response) => {
+const userPatch = (request, response) => {
     response.json({
         msg:'patch API - controller'
     });
