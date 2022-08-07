@@ -1,7 +1,8 @@
 const { response, request } = require('express');
 //Importamos el model usuario
 const Usuario = require('../models/usuario')
-
+//Importamos bjscriptjs para encriptar
+const bjscriptjs = require('bcryptjs');
 
 
 const userGet = (request, response) => {
@@ -29,9 +30,15 @@ const userPut = (request, response) => {
 
 const userPost = async (request, response) => {
     
-    const body = request.body;
-    const usuario = new Usuario(body);
+    const { nombre, correo, password, rol } = request.body;
+    const usuario = new Usuario({ nombre, correo, password, rol });
     console.log(usuario);
+    //Validamos que el email no exista previamente con otro user
+
+    //Encriptamos el pass
+    const salt = bjscriptjs.genSaltSync();
+    usuario.password = bjscriptjs.hashSync(password, salt);
+    //Guardamos en la db
     await usuario.save();
 
     response.json({
