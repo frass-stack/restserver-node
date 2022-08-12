@@ -22,8 +22,7 @@ const userPut = async (request, response) => {
 
     const { id } = request.params;
     //Desestructuramos los parametros que no queremos modificar
-    const { google, correo, password, ...resto } = request.body;
-    //TODO: validar contra la BD
+    const { _id, google, correo, password, ...resto } = request.body;
     //Encriptamos la contraseña
     if (password) {
         const salt = bjscriptjs.genSaltSync();

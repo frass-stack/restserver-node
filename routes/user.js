@@ -7,14 +7,19 @@ const { userGet,
         userDelete, 
         userPatch } = require('../controllers/userController');
 //helpers
-const { isRoleValid, isExistEmail } = require('../helpers/dbValidators');
+const { isRoleValid, isExistEmail, isExistUser } = require('../helpers/dbValidators');
 //middlewares
 const { validarCampos } = require('../middlewares/validarCampos');
 
 const router = Router();
 //endpoints
 router.get('/', userGet );
-router.put('/:id', userPut );
+router.put('/:id',[
+        check('id', 'No es un id valido').isMongoId(),
+        check('id').custom( isExistUser ),
+        check('rol').custom( isRoleValid ),
+        validarCampos
+], userPut );
 router.post('/', [
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
         check('correo', 'El correo ingresado no es valido').isEmail(),
