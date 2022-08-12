@@ -7,10 +7,10 @@ const bjscriptjs = require('bcryptjs');
 
 const userGet = (request, response) => {
 
-    const { q, nombre = 'No name', page = 1, limit = 1  } = request.query;
+    const { q, nombre = 'No name', page = 1, limit = 1 } = request.query;
 
     response.json({
-        msg:'get API - controller ',
+        msg: 'get API - controller ',
         q,
         nombre,
         page,
@@ -18,18 +18,27 @@ const userGet = (request, response) => {
     });
 };
 
-const userPut = (request, response) => {
+const userPut = async (request, response) => {
 
     const { id } = request.params;
+    //Desestructuramos los parametros que no queremos modificar
+    const { google, correo, password, ...resto } = request.body;
+    //TODO: validar contra la BD
+    //Encriptamos la contraseña
+    if (password) {
+        const salt = bjscriptjs.genSaltSync();
+        resto.password = bjscriptjs.hashSync(password, salt);
+    }
+
+    const usuario = await Usuario.findByIdAndUpdate(id, resto);
 
     response.json({
-        msg:'put API - controller',
-        id
+        usuario
     });
 };
 
 const userPost = async (request, response) => {
-    
+
     const { nombre, correo, password, rol } = request.body;
     const usuario = new Usuario({ nombre, correo, password, rol });
     console.log(usuario);
@@ -47,13 +56,13 @@ const userPost = async (request, response) => {
 
 const userDelete = (request, response) => {
     response.json({
-        msg:'delete API - controller'
+        msg: 'delete API - controller'
     });
 };
 
 const userPatch = (request, response) => {
     response.json({
-        msg:'patch API - controller'
+        msg: 'patch API - controller'
     });
 };
 
