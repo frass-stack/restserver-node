@@ -1,4 +1,5 @@
 const { response, request } = require('express');
+const { validationResult } = require('express-validator');
 //Importamos el model usuario
 const Usuario = require('../models/usuario')
 //Importamos bjscriptjs para encriptar
@@ -29,11 +30,22 @@ const userPut = (request, response) => {
 };
 
 const userPost = async (request, response) => {
+    //Validacion de errores.
+    const errors = validationResult(request);
+    if( !errors.isEmpty() ){
+        return response.status(400).json(errors);
+    }
     
     const { nombre, correo, password, rol } = request.body;
     const usuario = new Usuario({ nombre, correo, password, rol });
     console.log(usuario);
     //Validamos que el email no exista previamente con otro user
+    const emailExiste = await Usuario({ correo });
+    if( emailExiste ){
+        return response.status(400).json({
+            msg: 'El correo ingresado ya se encuentra registrado'
+        })
+    }
 
     //Encriptamos el pass
     const salt = bjscriptjs.genSaltSync();
