@@ -5,16 +5,32 @@ const Usuario = require('../models/usuario')
 const bjscriptjs = require('bcryptjs');
 
 
-const userGet = (request, response) => {
+const userGet = async (request, response) => {
 
-    const { q, nombre = 'No name', page = 1, limit = 1 } = request.query;
+    //Desestructuramos los parametros de la paginacion.
+    const { limite = 5, desde = 0 } = request.query;
+    //Buscamos los usuarios.
+    if( isNaN(desde) || isNaN(limite) ){
+        // throw new Error(`Los parametros ${desde} o ${limite}, deben ser numeros.`);
+        response.status(400).json({
+            msg:`Los parametros deben ser numeros.`
+        })
+    }
+    // const usuarios = await Usuario.find({ estado: true })
+    //     .skip(Number(desde))
+    //     .limit(Number(limite));
+    // const total = await Usuario.countDocuments({ estado: true })
+
+    const [total, usuarios] = await Promise.all([
+        Usuario.countDocuments({ estado: true }),
+        Usuario.find({ estado: true })
+                .skip(Number(desde))
+                .limit(Number(limite))
+    ]);
 
     response.json({
-        msg: 'get API - controller ',
-        q,
-        nombre,
-        page,
-        limit
+        total,
+        usuarios
     });
 };
 
@@ -22,7 +38,7 @@ const userPut = async (request, response) => {
 
     const { id } = request.params;
     //Desestructuramos los parametros que no queremos modificar
-    const { _id, google, correo, password, ...resto } = request.body;
+    const { _id, google, correo, password, estado, ...resto } = request.body;
     //Encriptamos la contraseña
     if (password) {
         const salt = bjscriptjs.genSaltSync();
