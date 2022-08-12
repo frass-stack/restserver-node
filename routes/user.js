@@ -6,6 +6,7 @@ const { userGet,
         userDelete, 
         userPatch } = require('../controllers/userController');
 const { validarCampos } = require('../middlewares/validarCampos');
+const Role = require('../models/role');
 
 const router = Router();
 
@@ -15,7 +16,13 @@ router.post('/', [
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
         check('correo', 'El correo ingresado no es valido').isEmail(),
         check('password', 'El password debe contener al menos 6 caracteres').isLength({ min:6 }),
-        check('rol', 'El rol no es valido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+        // check('rol', 'El rol no es valido').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+        check('rol').custom( async (rol = '') => {
+                const existeRol = await Role.findOne({ rol });
+                if( !existeRol ){
+                        throw new Error(`El rol ${rol} ingresado no es valido`);
+                }
+        }),
         validarCampos
 ], userPost );
 router.delete('/', userDelete );
