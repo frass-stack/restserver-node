@@ -33,13 +33,6 @@ const userPost = async (request, response) => {
     const { nombre, correo, password, rol } = request.body;
     const usuario = new Usuario({ nombre, correo, password, rol });
     console.log(usuario);
-    //Validamos que el email no exista previamente con otro user
-    const emailExiste = await Usuario.findOne({ correo });
-    if( emailExiste ){
-        return response.status(400).json({
-            msg: 'El correo ingresado ya se encuentra registrado'
-        })
-    }
 
     //Encriptamos el pass
     const salt = bjscriptjs.genSaltSync();
