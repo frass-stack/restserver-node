@@ -43,4 +43,10 @@ const UsuarioSchema = Schema({
     }
 });
 
+//Eliminamos el password y la version del registro al retornar la informacion
+UsuarioSchema.methods.toJSON = function(){
+    const { __v, password, ...usuario } = this.toObject();
+    return usuario;
+}
+
 module.exports = model('Usuario', UsuarioSchema);
