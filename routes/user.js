@@ -29,7 +29,7 @@ router.post('/', [
         check('rol').custom( isRoleValid ),
         validarCampos
 ], userPost );
-router.delete('/', userDelete );
+router.delete('/:id', userDelete );
 router.patch('/', userPatch );
 
 

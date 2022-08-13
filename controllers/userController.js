@@ -4,7 +4,6 @@ const Usuario = require('../models/usuario')
 //Importamos bjscriptjs para encriptar
 const bjscriptjs = require('bcryptjs');
 
-
 const userGet = async (request, response) => {
 
     //Desestructuramos los parametros de la paginacion.
@@ -69,10 +68,16 @@ const userPost = async (request, response) => {
     });
 };
 
-const userDelete = (request, response) => {
-    response.json({
-        msg: 'delete API - controller'
-    });
+const userDelete = async (request, response) => {
+    
+    const { id } = request.params;
+
+    //Borrado Fisico de la BD
+    // const usuario = await Usuario.findByIdAndDelete(id);
+
+    const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
+
+    response.json(usuario);
 };
 
 const userPatch = (request, response) => {
