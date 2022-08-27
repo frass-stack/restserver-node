@@ -8,5 +8,29 @@
 </head>
 <body>
     <h1>Hola Mundo!</h1>
+
+    <div id="g_id_onload"
+         data-client_id="799942310389-3qq3rale6o8j27bbrcvsnd925uumamfh.apps.googleusercontent.com"
+         data-auto_prompt="false"
+         data-callback="handleCredentialResponse">
+      </div>
+      <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+      </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        function handleCredentialResponse(response) {
+           //Google token: ID_TOKEN
+           console.log('id_token',response.credential);
+      
+           
+        }
+      </script>
 </body>
 </html>
