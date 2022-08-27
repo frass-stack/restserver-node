@@ -9,9 +9,7 @@ const { userGet,
 //helpers
 const { isRoleValid, isExistEmail, isExistUser } = require('../helpers/dbValidators');
 //middlewares
-const { validarCampos } = require('../middlewares/validarCampos');
-const { validarJWT } = require('../middlewares/validarJWT');
-const { esAdminRole, tieneRole } = require('../middlewares/validarRole');
+const { validarCampos, validarJWT, esAdminRole, tieneRole } = require('../middlewares')
 
 const router = Router();
 //endpoints
