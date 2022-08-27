@@ -72,14 +72,13 @@ const userDelete = async (request, response) => {
     
     const { id } = request.params;
 
-    const uid = request.uid;
-
     //Borrado Fisico de la BD
     // const usuario = await Usuario.findByIdAndDelete(id);
 
     const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
+    const usuarioAutenticado = request.usuario;
 
-    response.json({ usuario, uid });
+    response.json({ usuario, usuarioAutenticado });
 };
 
 const userPatch = (request, response) => {
