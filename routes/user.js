@@ -10,6 +10,7 @@ const { userGet,
 const { isRoleValid, isExistEmail, isExistUser } = require('../helpers/dbValidators');
 //middlewares
 const { validarCampos } = require('../middlewares/validarCampos');
+const { validarJWT } = require('../middlewares/validarJWT');
 
 const router = Router();
 //endpoints
@@ -30,6 +31,7 @@ router.post('/', [
         validarCampos
 ], userPost );
 router.delete('/:id',[
+        validarJWT,
         check('id', 'No es un id valido').isMongoId(),
         check('id').custom( isExistUser ),
         validarCampos
