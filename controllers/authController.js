@@ -52,16 +52,45 @@ const login = async (req, res = response) => {
     }
 }
 
-const googleSignIn = async ( req, resp=response ) => {
+const googleSignIn = async ( req, resp = response ) => {
 
     const { id_token } = req.body;
 
     try {
         const { nombre, img, correo } = await googleVerify( id_token );
-        console.log(nombre, img, correo)
+        //console.log(nombre, img, correo)
+
+        let usuario = await Usuario.findOne({ correo });
+
+        //Si el usuario no existe y se busca loguear
+        if(!usuario){
+            //Genero un nuevo usuario
+            const data = {
+                nombre,
+                correo,
+                img,
+                password: ':p',
+                rol,
+                google: true
+            };
+            usuario = new Usuario( data );
+            await usuario.save();
+        }
+
+        //Si el usuario fue inhabilitado
+        if(!usuario.estado){
+            return resp.status(401).json({
+                ok:false,
+                msg:'Hable con el administrador. Usuario bloqueado.'
+            });
+        }
+
+        //Generamos el token
+        const token = await generarJWT(  usuario.id );
+
         resp.json({
-            msg:'Todo Ok',
-            id_token,
+            token,
+            usuario
         })
     } catch (error) {
         resp.status(400).json({
@@ -69,7 +98,6 @@ const googleSignIn = async ( req, resp=response ) => {
             msg:'El token no se pudo verificar.'
         })
     }
-
 }
 
 module.exports = {
