@@ -1,4 +1,3 @@
-const { response, request } = require('express');
 //Importamos el model usuario
 const Usuario = require('../models/usuario')
 //Importamos bjscriptjs para encriptar

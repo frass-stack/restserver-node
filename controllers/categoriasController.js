@@ -3,9 +3,40 @@ const { Categoria } = require('../models')
 
 
 //Obtener categorias - paginado - populate
+const obtenerCategorias = async (  req = request, resp = response ) => {
+    const { limite = 5, desde = 0 } = req.body;
+    if( isNaN(desde) || isNaN(limite) ){
+        // throw new Error(`Los parametros ${desde} o ${limite}, deben ser numeros.`);
+        response.status(400).json({
+            msg:`Los parametros deben ser numeros.`
+        })
+    }
+    const [total, categorias] = await Promise.all([
+        Categoria.countDocuments({ estado:true }),
+        Categoria.find({ estado:true })
+            .skip(Number(desde))
+            .limit(Number(limite))
+    ]);
+
+    resp.json({
+        total,
+        categorias
+    });
+}
 //Obtener categoria - populate
-//ActualziarCategoria
-//BorrarCategoria
+const obtenerCategoriaById = async (   req = request, resp = response ) => {
+    const { id } = req.params;
+    
+    const categoria = await Categoria.findById( id );
+    if( !categoria ){
+        resp.json({
+            msg:`Categoria con ${ id }, no encontrada.`
+        })
+    }
+    resp.json({
+        categoria
+    })
+}
 
 const crearCategoria = async ( req = request, resp = response ) => {
     const nombre = req.body.nombre;
@@ -30,6 +61,34 @@ const crearCategoria = async ( req = request, resp = response ) => {
     resp.status(201).json(categoria);
 }
 
+//ActualziarCategoria
+const categoriaPut = async (request, response) => {
+
+    const { id } = request.params;
+    //Desestructuramos los parametros que no queremos modificar
+    const { _id, ...resto } = request.body;
+    const categoria = await Categoria.findByIdAndUpdate(id, resto);
+    //console.log(categoria)
+
+    response.json({
+        categoria
+    });
+};
+
+//BorrarCategoria
+const categoriaDelete = async (request, response) => {
+    const { id } = request.params;
+
+    const categoria = await Categoria.findByIdAndUpdate(id, { estado: false });
+    const usuarioAutenticado = request.usuario;
+
+    response.json({ categoria, usuarioAutenticado });
+}
+
 module.exports = {
-    crearCategoria
+    crearCategoria,
+    obtenerCategorias,
+    obtenerCategoriaById,
+    categoriaPut,
+    categoriaDelete
 }
