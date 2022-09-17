@@ -14,6 +14,7 @@ const obtenerCategorias = async (  req = request, resp = response ) => {
     const [total, categorias] = await Promise.all([
         Categoria.countDocuments({ estado:true }),
         Categoria.find({ estado:true })
+            .populate('usuario', 'nombre')
             .skip(Number(desde))
             .limit(Number(limite))
     ]);
@@ -27,7 +28,9 @@ const obtenerCategorias = async (  req = request, resp = response ) => {
 const obtenerCategoriaById = async (   req = request, resp = response ) => {
     const { id } = req.params;
     
-    const categoria = await Categoria.findById( id );
+    const categoria = await Categoria.findById( id )
+        .populate('usuario', 'nombre');
+
     if( !categoria ){
         resp.json({
             msg:`Categoria con ${ id }, no encontrada.`
@@ -66,8 +69,10 @@ const categoriaPut = async (request, response) => {
 
     const { id } = request.params;
     //Desestructuramos los parametros que no queremos modificar
-    const { _id, ...resto } = request.body;
-    const categoria = await Categoria.findByIdAndUpdate(id, resto);
+    const { estado, usuario, ...resto } = request.body;
+    resto.usuario = request.usuario._id;
+
+    const categoria = await Categoria.findByIdAndUpdate(id, resto, {new:true});
     //console.log(categoria)
 
     response.json({

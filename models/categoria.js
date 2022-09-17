@@ -18,4 +18,10 @@ const CategoriaSchema = Schema({
     }
 })
 
+//Eliminamos el password y la version del registro al retornar la informacion
+CategoriaSchema.methods.toJSON = function(){
+    const { __v, estado, ...data } = this.toObject();
+    return data;
+}
+
 module.exports = model('Categoria', CategoriaSchema);
