@@ -1,12 +1,13 @@
 const { response, request } = require("express");
+const { buscarUsuarios } = require("../helpers/busquedas");
+
 
 const coleccionesPermitidas = [
-    'usuarios',
+    'user',
     'categorias',
     'productos',
     'roles'
 ];
-
 
 const buscar = (req = request, resp = response) => {
 
@@ -18,9 +19,9 @@ const buscar = (req = request, resp = response) => {
         });
     }
 
-    switch (key) {
-        case 'usuarios':
-
+    switch (collection) {
+        case 'user':
+            buscarUsuarios(term, resp)
             break;
         case 'categorias':
 
