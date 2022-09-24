@@ -1,9 +1,9 @@
 const { response, request } = require("express");
-const { buscarUsuarios } = require("../helpers/busquedas");
+const { buscarUsuarios, buscarCategorias, buscarProductos } = require("../helpers/busquedas");
 
 
 const coleccionesPermitidas = [
-    'user',
+    'usuarios',
     'categorias',
     'productos',
     'roles'
@@ -20,14 +20,14 @@ const buscar = (req = request, resp = response) => {
     }
 
     switch (collection) {
-        case 'user':
+        case 'usuarios':
             buscarUsuarios(term, resp)
             break;
         case 'categorias':
-
+            buscarCategorias(term, resp)
             break;
         case 'productos':
-
+            buscarProductos(term, resp)
             break;
         default:
             resp.status(500).json({
