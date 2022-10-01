@@ -35,10 +35,23 @@ const isExistProductPorId = async ( id = '' ) => {
     }
 }
 
+/**
+ * validar colecciones
+ */
+const coleccionesPermitidas = (coleccion = '', colecciones = []) => {
+    const incluida = colecciones.includes( coleccion );
+    if(!incluida){
+        throw new Error(`La coleccion ${ coleccion }, no esta entre las colecciones ${ colecciones }.`);
+    }
+    //A diferencia de las otras validaciones custom, aqui en el check, le llega una fn con argumentos, por lo que debemos retornar un true si todo sale bien.
+    return true;
+}
+
 module.exports = {
     isRoleValid,
     isExistEmail,
     isExistUser,
     isExistCategoryPorId,
-    isExistProductPorId
+    isExistProductPorId,
+    coleccionesPermitidas
 }
