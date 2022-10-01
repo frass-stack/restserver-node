@@ -1,4 +1,5 @@
 const { response } = require("express");
+const { uuid } = require('uuidv4');
 const path = require('path');
 
 
@@ -22,7 +23,9 @@ const cargarArchivos = (req, resp = response) => {
         msg: `La extension ${ extension }, no esta permitida. Las siguientes extensiones son validas: ${ extensionesValidas }.`
     })
 
-    const uploadPath = path.join(__dirname, '../uploads/' + archivo.name);
+    //Ubicar y cambiar nombre
+    const nombreTemp = uuid() + `.${ extension }`
+    const uploadPath = path.join(__dirname, '../uploads/' + nombreTemp);
 
     archivo.mv(uploadPath, (err) => {
         if (err) {
