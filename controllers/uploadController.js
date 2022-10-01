@@ -13,6 +13,14 @@ const cargarArchivos = (req, resp = response) => {
     console.log('req.files >>>', req.files); // eslint-disable-line
 
     const { archivo } = req.files;
+    
+    //Validamos la extension
+    const nombreCortado = archivo.name.split('.');
+    const extension = nombreCortado[nombreCortado.length - 1];
+    const extensionesValidas = ['png', 'jpg', 'jpeg', 'gif'];
+    if(!extensionesValidas.includes( extension )) return resp.json({
+        msg: `La extension ${ extension }, no esta permitida. Las siguientes extensiones son validas: ${ extensionesValidas }.`
+    })
 
     const uploadPath = path.join(__dirname, '../uploads/' + archivo.name);
 
