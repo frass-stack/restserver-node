@@ -1,11 +1,15 @@
-const { uuid } = require('uuidv4');
+const { v4:uuid } = require('uuid');
 const path = require('path');
 
 const subirArchivo = (files, extensionesValidas = ['png', 'jpg', 'jpeg', 'gif'], carpeta = '') => {
 
     return new Promise((resolve, reject) => {
 
-        console.log('files >>>', files); // eslint-disable-line
+        if(!files){
+            return reject(`File no puede estar vacio. Por favor elija una img/archivo para cargar.`)            
+        }
+
+        //console.log('files >>>', files); // eslint-disable-line
     
         const { archivo } = files;
     
