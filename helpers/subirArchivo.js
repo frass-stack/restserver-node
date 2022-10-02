@@ -5,10 +5,6 @@ const subirArchivo = (files, extensionesValidas = ['png', 'jpg', 'jpeg', 'gif'],
 
     return new Promise((resolve, reject) => {
 
-        if(!files){
-            return reject(`File no puede estar vacio. Por favor elija una img/archivo para cargar.`)            
-        }
-
         //console.log('files >>>', files); // eslint-disable-line
     
         const { archivo } = files;
